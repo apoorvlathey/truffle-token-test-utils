@@ -1,4 +1,26 @@
 {
   "name": "truffle-token-test-utils",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "description": "Visualize ERC20 token transfers in Truffle Tests",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodinMaster/truffle-token-test-utils"
+  },
+  "main": "index.js",
+  "keywords": [
+    "truffle",
+    "ERC20",
+    "token",
+    "test",
+    "mocha",
+    "chai",
+    "ethereum",
+    "web3"
+  ],
+  "author": "Apoorv Lathey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodinMaster/truffle-token-test-utils/issues"
+  },
+  "homepage": "https://github.com/CodinMaster/truffle-token-test-utils#readme"
 }
