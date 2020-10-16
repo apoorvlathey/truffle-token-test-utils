@@ -37,4 +37,4 @@ printTokenTransfers(tx)
 ---
 ## Developed by:
 ### **Apoorv Lathey**
-![Twitter Follow](https://img.shields.io/twitter/follow/apoorvlathey?label=%40apoorvlathey&style=social)
+[![Twitter Follow](https://img.shields.io/twitter/follow/apoorvlathey?label=%40apoorvlathey&style=social)](https://twitter.com/apoorvlathey)
