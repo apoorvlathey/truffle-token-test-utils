@@ -15,12 +15,17 @@
     "mocha",
     "chai",
     "ethereum",
-    "web3"
+    "web3",
+    "openzeppelin"
   ],
   "author": "Apoorv Lathey",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/CodinMaster/truffle-token-test-utils/issues"
   },
-  "homepage": "https://github.com/CodinMaster/truffle-token-test-utils#readme"
+  "homepage": "https://github.com/CodinMaster/truffle-token-test-utils#readme",
+  "dependencies": {
+    "@truffle/contract": "^4.2.26",
+    "web3": "^1.3.0"
+  }
 }
