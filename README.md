@@ -14,23 +14,23 @@ $ npm install truffle-token-test-utils
 ### With Truffle:
 
 ```js
-const { setWeb3, printTokenTransfers } = require("truffle-token-test-utils");
+const tokenTransfers = require("truffle-token-test-utils");
 contract("ContractName", (accounts) => {
-  setWeb3(web3);  // web3 auto injected by truffle in tests
+  tokenTransfers.setWeb3(web3);  // web3 auto injected by truffle in tests
   ...
   const tx = await someContract.someFunction();
-  await printTokenTransfers(tx)
+  await tokenTransfers.print(tx)
 }
 ```
 ### With OpenZeppelin:
 
 ```js
 const { web3 } = require("@openzeppelin/test-environment");
-const { setWeb3, printTokenTransfers } = require("truffle-token-test-utils");
-setWeb3(web3);
+const tokenTransfers = require("truffle-token-test-utils");
+tokenTransfers.setWeb3(web3);
 ...
 const tx = await someContract.someFunction();
-await printTokenTransfers(tx)
+await tokenTransfers.print(tx);
 ```
 
 ## Sample Output

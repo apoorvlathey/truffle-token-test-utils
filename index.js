@@ -11,7 +11,7 @@ const setWeb3 = (web3Instance) => {
   ERC20Detailed.setProvider(web3.currentProvider);
 };
 
-const printTokenTransfers = async (tx) => {
+const print = async (tx) => {
   var addressToName = {
     [tx.receipt.from.toLowerCase()]: "SENDER",
     [tx.receipt.to.toLowerCase()]: "RECEIVER",
@@ -82,4 +82,4 @@ const printTokenTransfers = async (tx) => {
   console.table(output);
 };
 
-module.exports = { setWeb3, printTokenTransfers };
+module.exports = { setWeb3, print };
