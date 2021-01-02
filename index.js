@@ -123,7 +123,7 @@ const print = async (tx, customAddrToName, displayOverallBalChange) => {
   console.table(transfers);
 
   if(displayOverallBalChange) {
-    console.log("Final Balances:")
+    console.log("Balance Changes:")
     console.table(balances)
   }
 };
