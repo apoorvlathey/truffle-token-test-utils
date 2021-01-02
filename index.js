@@ -12,26 +12,33 @@ const setWeb3 = (web3Instance) => {
 };
 
 const print = async (tx, customAddrToName, displayOverallBalChange) => {
+  // make addresses lowercase
   for(addr in customAddrToName) {
     customAddrToName[addr.toLowerCase()] = customAddrToName[addr]
   }
+  // append to our object
   var addressToName = {
     [tx.receipt.from.toLowerCase()]: "SENDER",
     [tx.receipt.to.toLowerCase()]: "RECEIVER",
     ...customAddrToName
   };
 
-
   const getName = (addr) => {
     return addressToName[addr.toLowerCase()] || addr;
   };
   const toDecimal = (amount, decimals) => {
+    decimals = parseInt(decimals)
     const divisor = new BN("10").pow(new BN(decimals));
-    return parseFloat(
-      new BN(amount).div(divisor).toString() +
-        "." +
-        new BN(amount).mod(divisor).toString()
-    );
+    const beforeDec = new BN(amount).div(divisor).toString();
+    var afterDec = new BN(amount).mod(divisor).toString();
+
+    if(afterDec.length < decimals && afterDec != "0") {
+      // pad with extra zeroes
+      pad = Array(decimals+1).join("0")
+      afterDec = (pad+afterDec).slice(-decimals);
+    }
+
+    return (beforeDec + "." + afterDec);  
   };
 
   const logs = tx.receipt.rawLogs;
@@ -87,6 +94,7 @@ const print = async (tx, customAddrToName, displayOverallBalChange) => {
     });
 
     if(displayOverallBalChange) {
+      // cases to avoid undefined error
       if(balances[fromName]) {
         if(balances[fromName][tokenSymbol]) {
           balances[fromName][tokenSymbol] -= parseFloat(value);
