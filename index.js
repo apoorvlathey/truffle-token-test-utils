@@ -12,8 +12,8 @@ const setWeb3 = (web3Instance) => {
 };
 
 const print = async (tx, customAddrToName) => {
-  for(k in customAddrToName) {
-    customAddrToName[k.toLowerCase()] = customAddrToName[k]
+  for(addr in customAddrToName) {
+    customAddrToName[addr.toLowerCase()] = customAddrToName[addr]
   }
   var addressToName = {
     [tx.receipt.from.toLowerCase()]: "SENDER",
