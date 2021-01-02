@@ -15,10 +15,12 @@ $ npm install truffle-token-test-utils
 
 ```js
 const { setWeb3, printTokenTransfers } = require("truffle-token-test-utils");
-setWeb3(web3);  // web3 auto injected by truffle in tests
-...
-const tx = await someContract.someFunction();
-printTokenTransfers(tx)
+contract("ContractName", (accounts) => {
+  setWeb3(web3);  // web3 auto injected by truffle in tests
+  ...
+  const tx = await someContract.someFunction();
+  await printTokenTransfers(tx)
+}
 ```
 ### With OpenZeppelin:
 
@@ -28,11 +30,11 @@ const { setWeb3, printTokenTransfers } = require("truffle-token-test-utils");
 setWeb3(web3);
 ...
 const tx = await someContract.someFunction();
-printTokenTransfers(tx)
+await printTokenTransfers(tx)
 ```
 
 ## Sample Output
-![Console Output](https://i.imgur.com/FTPduIH.png)
+![Console Output](https://i.imgur.com/e11x6ti.jpg)
 
 ---
 ## Developed by:
