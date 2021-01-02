@@ -36,6 +36,20 @@ await tokenTransfers.print(tx);
 ## Sample Output
 ![Console Output](https://i.imgur.com/e11x6ti.jpg)
 
+## Additional Options
+An object for custom `addressToName` mapping can be passed along with `print()` to display names instead of ETH addresses.
+Without it the default `'SENDER'` and `'RECEIVER'` are displayed for the transaction sender and receiver contract address repectively. They both can also be overwritten with the passed object.
+
+Eg:
+```js
+await tokenTransfers.print(tx, {
+  "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B": "Vitalik"
+})
+```
+
+Output:
+
+![Custom Address Mapping output](https://i.imgur.com/St58RfP.png)
 ---
 ## Developed by:
 ### **Apoorv Lathey**

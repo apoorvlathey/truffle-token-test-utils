@@ -11,11 +11,17 @@ const setWeb3 = (web3Instance) => {
   ERC20Detailed.setProvider(web3.currentProvider);
 };
 
-const print = async (tx) => {
+const print = async (tx, customAddrToName) => {
+  for(k in customAddrToName) {
+    customAddrToName[k.toLowerCase()] = customAddrToName[k]
+  }
   var addressToName = {
     [tx.receipt.from.toLowerCase()]: "SENDER",
     [tx.receipt.to.toLowerCase()]: "RECEIVER",
+    ...customAddrToName
   };
+
+
   const getName = (addr) => {
     return addressToName[addr.toLowerCase()] || addr;
   };
