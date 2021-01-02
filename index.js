@@ -11,7 +11,7 @@ const setWeb3 = (web3Instance) => {
   ERC20Detailed.setProvider(web3.currentProvider);
 };
 
-const print = async (tx, customAddrToName) => {
+const print = async (tx, customAddrToName, displayOverallBalChange) => {
   for(addr in customAddrToName) {
     customAddrToName[addr.toLowerCase()] = customAddrToName[addr]
   }
@@ -63,7 +63,8 @@ const print = async (tx, customAddrToName) => {
   const eventSig = web3.eth.abi.encodeEventSignature(eventInterface);
   const transferLogs = logs.filter((l) => l.topics.includes(eventSig));
 
-  var output = [];
+  var transfers = [];
+  var balances = {};
   for (const log of transferLogs) {
     const r = web3.eth.abi.decodeLog(
       eventInterface.inputs,
@@ -78,14 +79,45 @@ const print = async (tx, customAddrToName) => {
     const toName = getName(r.to);
     const value = toDecimal(r.value, decimals);
 
-    output.push({
+    transfers.push({
       from: fromName,
       to: toName,
       value: value,
       token: tokenSymbol,
     });
+
+    if(displayOverallBalChange) {
+      if(balances[fromName]) {
+        if(balances[fromName][tokenSymbol]) {
+          balances[fromName][tokenSymbol] -= parseFloat(value);
+        } else {
+          balances[fromName][tokenSymbol] = -parseFloat(value);
+        }
+      } else {
+        balances[fromName] = {
+          [tokenSymbol]: -parseFloat(value)
+        }
+      }
+
+      if(balances[toName]) {
+        if(balances[toName][tokenSymbol]) {
+          balances[toName][tokenSymbol] += parseFloat(value);
+        } else {
+          balances[toName][tokenSymbol] = parseFloat(value);
+        }
+      } else {
+        balances[toName] = {
+          [tokenSymbol]: parseFloat(value)
+        }
+      }
+    }
   }
-  console.table(output);
+  console.table(transfers);
+
+  if(displayOverallBalChange) {
+    console.log("Final Balances:")
+    console.table(balances)
+  }
 };
 
 module.exports = { setWeb3, print };
