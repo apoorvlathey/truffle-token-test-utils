@@ -11,21 +11,34 @@ const setWeb3 = (web3Instance) => {
   ERC20Detailed.setProvider(web3.currentProvider);
 };
 
-const printTokenTransfers = async (tx) => {
+const print = async (tx, customAddrToName, displayOverallBalChange) => {
+  // make addresses lowercase
+  for(addr in customAddrToName) {
+    customAddrToName[addr.toLowerCase()] = customAddrToName[addr]
+  }
+  // append to our object
   var addressToName = {
     [tx.receipt.from.toLowerCase()]: "SENDER",
     [tx.receipt.to.toLowerCase()]: "RECEIVER",
+    ...customAddrToName
   };
+
   const getName = (addr) => {
     return addressToName[addr.toLowerCase()] || addr;
   };
   const toDecimal = (amount, decimals) => {
+    decimals = parseInt(decimals)
     const divisor = new BN("10").pow(new BN(decimals));
-    return parseFloat(
-      new BN(amount).div(divisor).toString() +
-        "." +
-        new BN(amount).mod(divisor).toString()
-    );
+    const beforeDec = new BN(amount).div(divisor).toString();
+    var afterDec = new BN(amount).mod(divisor).toString();
+
+    if(afterDec.length < decimals && afterDec != "0") {
+      // pad with extra zeroes
+      pad = Array(decimals+1).join("0")
+      afterDec = (pad+afterDec).slice(-decimals);
+    }
+
+    return (beforeDec + "." + afterDec);  
   };
 
   const logs = tx.receipt.rawLogs;
@@ -57,7 +70,8 @@ const printTokenTransfers = async (tx) => {
   const eventSig = web3.eth.abi.encodeEventSignature(eventInterface);
   const transferLogs = logs.filter((l) => l.topics.includes(eventSig));
 
-  var output = [];
+  var transfers = [];
+  var balances = {};
   for (const log of transferLogs) {
     const r = web3.eth.abi.decodeLog(
       eventInterface.inputs,
@@ -72,14 +86,46 @@ const printTokenTransfers = async (tx) => {
     const toName = getName(r.to);
     const value = toDecimal(r.value, decimals);
 
-    output.push({
+    transfers.push({
       from: fromName,
       to: toName,
       value: value,
       token: tokenSymbol,
     });
+
+    if(displayOverallBalChange) {
+      // cases to avoid undefined error
+      if(balances[fromName]) {
+        if(balances[fromName][tokenSymbol]) {
+          balances[fromName][tokenSymbol] -= parseFloat(value);
+        } else {
+          balances[fromName][tokenSymbol] = -parseFloat(value);
+        }
+      } else {
+        balances[fromName] = {
+          [tokenSymbol]: -parseFloat(value)
+        }
+      }
+
+      if(balances[toName]) {
+        if(balances[toName][tokenSymbol]) {
+          balances[toName][tokenSymbol] += parseFloat(value);
+        } else {
+          balances[toName][tokenSymbol] = parseFloat(value);
+        }
+      } else {
+        balances[toName] = {
+          [tokenSymbol]: parseFloat(value)
+        }
+      }
+    }
   }
-  console.table(output);
+  console.table(transfers);
+
+  if(displayOverallBalChange) {
+    console.log("Balance Changes:")
+    console.table(balances)
+  }
 };
 
-module.exports = { setWeb3, printTokenTransfers };
+module.exports = { setWeb3, print };
